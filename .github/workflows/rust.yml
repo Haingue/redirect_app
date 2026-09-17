@@ -1,0 +1,36 @@
+name: Build and publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+    - name: Run release
+      run: cargo build --release --target x86_64-pc-windows-gnu
+    - name: Add target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/upload-artifact@v7
+      name: Publish build (bin)
+      with:
+        name: redirect_app
+        path: target/release/redirect_app
+    - uses: actions/upload-artifact@v7
+      name: Publish build (x86_64)
+      with:
+        name: redirect_app
+        path: target/x86_64-pc-windows-gnu/release/redirect_app.exe
+
