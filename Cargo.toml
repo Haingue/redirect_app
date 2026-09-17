@@ -1,0 +1,16 @@
+[package]
+name = "redirect_app"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+codegen-units = 1
+
+[dependencies]
+axum = "0.8.9"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net"] }
+dotenvy = "0.15"
+rust-embed = "8"
